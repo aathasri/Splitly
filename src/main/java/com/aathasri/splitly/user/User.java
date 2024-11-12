@@ -2,12 +2,15 @@ package com.aathasri.splitly.user;
 
 public class User {
 
-    private int id;
+    private long id;
     private String name;
     private String username;
     private String email;
 
-    public User(int id, String name, String username, String email) {
+    public User() {
+    }
+
+    public User(long id, String name, String username, String email) {
         this.id = id;
         this.name = name;
         this.username = username;
@@ -20,11 +23,11 @@ public class User {
         this.email = email;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

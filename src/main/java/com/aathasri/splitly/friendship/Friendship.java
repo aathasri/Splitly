@@ -4,13 +4,16 @@ import java.time.LocalDate;
 
 public class Friendship {
 
-    private int id;
-    private int senderId;
-    private int receiverId;
+    private long id;
+    private long senderId;
+    private long receiverId;
     private LocalDate requestDate;
     private FriendshipStatus status;
 
-    public Friendship(int id, int senderId, int receiverId, LocalDate requestDate, FriendshipStatus status) {
+    public Friendship() {
+    }
+
+    public Friendship(long id, long senderId, long receiverId, LocalDate requestDate, FriendshipStatus status) {
         this.id = id;
         this.senderId = senderId;
         this.receiverId = receiverId;
@@ -18,34 +21,34 @@ public class Friendship {
         this.status = status;
     }
 
-    public Friendship(int senderId, int receiverId, LocalDate requestDate, FriendshipStatus status) {
+    public Friendship(long senderId, long receiverId, LocalDate requestDate, FriendshipStatus status) {
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.requestDate = requestDate;
         this.status = status;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getSenderId() {
+    public long getSenderId() {
         return senderId;
     }
 
-    public void setSenderId(int senderId) {
+    public void setSenderId(long senderId) {
         this.senderId = senderId;
     }
 
-    public int getReceiverId() {
+    public long getReceiverId() {
         return receiverId;
     }
 
-    public void setReceiverId(int receiverId) {
+    public void setReceiverId(long receiverId) {
         this.receiverId = receiverId;
     }
 

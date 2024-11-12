@@ -5,17 +5,20 @@ import java.time.LocalDate;
 
 public class Payment {
 
-    private int id;
-    private int payerId;
-    private int recipientId;
-    private int planId;
+    private long id;
+    private long payerId;
+    private long recipientId;
+    private long planId;
     private BigDecimal amount;
     private LocalDate date;
     private String method;
     private PaymentStatus status;
     private Boolean toPlan;
 
-    public Payment(int id, int payerId, int recipientId, int planId, BigDecimal amount, LocalDate date, String method, PaymentStatus status, Boolean toPlan) {
+    public Payment() {
+    }
+
+    public Payment(long id, long payerId, long recipientId, long planId, BigDecimal amount, LocalDate date, String method, PaymentStatus status, Boolean toPlan) {
         this.id = id;
         this.payerId = payerId;
         this.recipientId = recipientId;
@@ -27,7 +30,7 @@ public class Payment {
         this.toPlan = toPlan;
     }
 
-    public Payment(int payerId, int recipientId, int planId, BigDecimal amount, LocalDate date, String method, PaymentStatus status, Boolean toPlan) {
+    public Payment(long payerId, long recipientId, long planId, BigDecimal amount, LocalDate date, String method, PaymentStatus status, Boolean toPlan) {
         this.payerId = payerId;
         this.recipientId = recipientId;
         this.planId = planId;
@@ -38,35 +41,35 @@ public class Payment {
         this.toPlan = toPlan;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getPayerId() {
+    public long getPayerId() {
         return payerId;
     }
 
-    public void setPayerId(int payerId) {
+    public void setPayerId(long payerId) {
         this.payerId = payerId;
     }
 
-    public int getRecipientId() {
+    public long getRecipientId() {
         return recipientId;
     }
 
-    public void setRecipientId(int recipientId) {
+    public void setRecipientId(long recipientId) {
         this.recipientId = recipientId;
     }
 
-    public int getPlanId() {
+    public long getPlanId() {
         return planId;
     }
 
-    public void setPlanId(int planId) {
+    public void setPlanId(long planId) {
         this.planId = planId;
     }
 
