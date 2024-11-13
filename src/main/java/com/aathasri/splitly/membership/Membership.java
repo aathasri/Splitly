@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 
 public class Membership {
 
-    private long id;
-    private long planId;
-    private long memberId;
+    private Long id;
+    private Long planId;
+    private Long memberId;
     private Boolean isAdmin;
     private BigDecimal amountDue;
     private double share;
@@ -14,7 +14,7 @@ public class Membership {
     public Membership() {
     }
 
-    public Membership(long id, long planId, long memberId, Boolean isAdmin, BigDecimal amountDue, double share) {
+    public Membership(Long id, Long planId, Long memberId, Boolean isAdmin, BigDecimal amountDue, double share) {
         this.id = id;
         this.planId = planId;
         this.memberId = memberId;
@@ -23,7 +23,7 @@ public class Membership {
         this.share = share;
     }
 
-    public Membership(long planId, long memberId, Boolean isAdmin, BigDecimal amountDue, double share) {
+    public Membership(Long planId, Long memberId, Boolean isAdmin, BigDecimal amountDue, double share) {
         this.planId = planId;
         this.memberId = memberId;
         this.isAdmin = isAdmin;
@@ -31,27 +31,27 @@ public class Membership {
         this.share = share;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public long getPlanId() {
+    public Long getPlanId() {
         return planId;
     }
 
-    public void setPlanId(long planId) {
+    public void setPlanId(Long planId) {
         this.planId = planId;
     }
 
-    public long getMemberId() {
+    public Long getMemberId() {
         return memberId;
     }
 
-    public void setMemberId(long memberId) {
+    public void setMemberId(Long memberId) {
         this.memberId = memberId;
     }
 

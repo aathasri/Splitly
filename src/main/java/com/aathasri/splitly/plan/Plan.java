@@ -20,7 +20,7 @@ public class Plan {
             strategy = GenerationType.SEQUENCE,
             generator = "plan_sequence"
     )
-    private long id;
+    private Long id;
     private String name;
     private BigDecimal monthlyPrice;
     private Currency currency;
@@ -30,7 +30,7 @@ public class Plan {
     public Plan() {
     }
 
-    public Plan(long id, String name, BigDecimal monthlyPrice, Currency currency, LocalDate paymentDate, Period paymentInterval) {
+    public Plan(Long id, String name, BigDecimal monthlyPrice, Currency currency, LocalDate paymentDate, Period paymentInterval) {
         this.id = id;
         this.name = name;
         this.monthlyPrice = monthlyPrice;
@@ -47,11 +47,11 @@ public class Plan {
         this.paymentInterval = paymentInterval;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

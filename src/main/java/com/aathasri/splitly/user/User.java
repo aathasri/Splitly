@@ -1,8 +1,22 @@
 package com.aathasri.splitly.user;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table
 public class User {
 
-    private long id;
+    @Id
+    @SequenceGenerator(
+            name = "user_sequence",
+            sequenceName = "user_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "user_sequence"
+    )
+    private Long id;
     private String name;
     private String username;
     private String email;
@@ -10,7 +24,7 @@ public class User {
     public User() {
     }
 
-    public User(long id, String name, String username, String email) {
+    public User(Long id, String name, String username, String email) {
         this.id = id;
         this.name = name;
         this.username = username;
@@ -23,11 +37,11 @@ public class User {
         this.email = email;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
