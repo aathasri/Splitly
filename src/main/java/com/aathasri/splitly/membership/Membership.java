@@ -1,9 +1,22 @@
 package com.aathasri.splitly.membership;
 
+import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 
+@Entity
+@Table
 public class Membership {
-
+    @Id
+    @SequenceGenerator(
+            name = "membership_sequence",
+            sequenceName = "membership_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "membership_sequence"
+    )
     private Long id;
     private Long planId;
     private Long memberId;
@@ -14,20 +27,18 @@ public class Membership {
     public Membership() {
     }
 
-    public Membership(Long id, Long planId, Long memberId, Boolean isAdmin, BigDecimal amountDue, double share) {
+    public Membership(Long id, Long planId, Long memberId, Boolean isAdmin, double share) {
         this.id = id;
         this.planId = planId;
         this.memberId = memberId;
         this.isAdmin = isAdmin;
-        this.amountDue = amountDue;
         this.share = share;
     }
 
-    public Membership(Long planId, Long memberId, Boolean isAdmin, BigDecimal amountDue, double share) {
+    public Membership(Long planId, Long memberId, Boolean isAdmin, double share) {
         this.planId = planId;
         this.memberId = memberId;
         this.isAdmin = isAdmin;
-        this.amountDue = amountDue;
         this.share = share;
     }
 
@@ -67,9 +78,9 @@ public class Membership {
         return amountDue;
     }
 
-    public void setAmountDue(BigDecimal amountDue) {
-        this.amountDue = amountDue;
-    }
+//    public void setAmountDue(BigDecimal amountDue) {
+//        this.amountDue = amountDue;
+//    }
 
     public double getShare() {
         return share;
