@@ -1,10 +1,23 @@
 package com.aathasri.splitly.payment;
 
+import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@Entity
+@Table
 public class Payment {
-
+    @Id
+    @SequenceGenerator(
+            name = "payment_sequence",
+            sequenceName = "payment_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "payment_sequence"
+    )
     private Long id;
     private Long payerId;
     private Long recipientId;

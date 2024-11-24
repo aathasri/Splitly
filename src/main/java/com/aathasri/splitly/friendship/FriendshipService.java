@@ -51,17 +51,18 @@ public class FriendshipService {
             friendship.setReceiverId(recieverId);
         }
 
-        if (requestDate != null && requestDate.equals(friendship.getRequestDate())) {
+        if (requestDate != null && !requestDate.equals(friendship.getRequestDate())) {
             if (requestDate.isAfter(LocalDate.now())) {
                 throw new IllegalStateException("request date cannot be in the future");
             }
             if (requestDate.isBefore(LocalDate.now().minusYears(1))) {
                 throw new IllegalStateException("request dat cannot be more than 1 year in the past");
             }
+            friendship.setRequestDate(requestDate);
         }
 
         if (friendshipStatus != null && !friendshipStatus.equals(friendship.getStatus())) {
-            throw new IllegalStateException("invalid friendship status");
+            friendship.setStatus(friendshipStatus);
         }
     }
 
