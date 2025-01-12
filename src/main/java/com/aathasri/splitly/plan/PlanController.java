@@ -1,5 +1,6 @@
 package com.aathasri.splitly.plan;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,7 @@ public class PlanController {
     }
 
     @PostMapping
-    public void registerNewPlan(@RequestBody Plan plan) {
+    public void registerNewPlan(@Valid @RequestBody Plan plan) {
         planService.addNewPlan(plan);
     }
 
@@ -39,11 +40,7 @@ public class PlanController {
     @PutMapping(path = "{planId}")
     public void updatePlan(
             @PathVariable("planId") Long planId,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) BigDecimal monthlyPrice,
-            @RequestParam(required = false) Currency currency,
-            @RequestParam(required = false) LocalDate paymentDate,
-            @RequestParam(required = false) Period paymentInterval) {
-        planService.updatePlan(planId, name, monthlyPrice, currency, paymentDate, paymentInterval);
+            @Valid @RequestBody Plan plan) {
+        planService.updatePlan(planId, plan);
     }
 }

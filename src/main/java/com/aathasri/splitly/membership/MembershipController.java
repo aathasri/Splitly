@@ -1,5 +1,7 @@
 package com.aathasri.splitly.membership;
 
+import com.aathasri.splitly.payment.PaymentDTO;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,4 +42,21 @@ public class MembershipController {
                                  ) {
         membershipService.updateMembership(membershipId, planId, memberId, isAdmin, share);
     }
+
+
+
+
+
+//    @PostMapping
+//    public void registerMembership(@RequestBody MembershipDTO membershipDTO) {
+//        membershipService.addNewMembership(membershipDTO);
+//    }
+
+
+//    @PutMapping(path = "{membershipId}")
+//    public void updateMembership(@PathVariable("membershipId") Long membershipId,
+//                                 @Valid @RequestParam(required = false) PaymentDTO paymentDTO
+//    ) {
+//        membershipService.updateMembership(membershipId, paymentDTO);
+//    }
 }

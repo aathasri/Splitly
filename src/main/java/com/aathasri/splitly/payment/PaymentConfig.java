@@ -5,22 +5,21 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.Month;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Configuration
 public class PaymentConfig {
 
     @Bean
-    CommandLineRunner commandLineRunner(PaymentRepository repository) {
+    CommandLineRunner commandLineRunnerPayment(PaymentRepository repository) {
         return args -> {
             Payment payment1 = new Payment(
                     1L,
                     2L,
                     1L,
                     BigDecimal.valueOf(10.99),
-                    LocalDate.now(),
+                    LocalDateTime.now(),
                     "e-transfer",
                     PaymentStatus.INPROGRESS,
                     false

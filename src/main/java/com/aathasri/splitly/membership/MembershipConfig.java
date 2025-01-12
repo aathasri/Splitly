@@ -10,7 +10,7 @@ import java.util.List;
 public class MembershipConfig {
 
     @Bean
-    CommandLineRunner commandLineRunner(MembershipRepository repository) {
+    CommandLineRunner commandLineRunnerMembership(MembershipRepository repository) {
         return args -> {
             Membership spotifyMember1 = new Membership(
                     1L,

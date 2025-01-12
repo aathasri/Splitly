@@ -12,7 +12,7 @@ import java.util.List;
 public class FriendshipConfig {
 
     @Bean
-    CommandLineRunner commandLineRunner(FriendshipRepository repository) {
+    CommandLineRunner commandLineRunnerFriendship(FriendshipRepository repository) {
         return args -> {
             Friendship friends = new Friendship(
                     1L,

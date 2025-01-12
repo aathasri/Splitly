@@ -1,10 +1,12 @@
 package com.aathasri.splitly.payment;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -24,7 +26,7 @@ public class PaymentController {
     }
 
     @PostMapping
-    public void registerNewPayment(@RequestBody Payment payment) {
+    public void registerNewPayment(@Valid @RequestBody PaymentDTO payment) {
         paymentService.addNewPayment(payment);
     }
 
@@ -33,18 +35,10 @@ public class PaymentController {
         paymentService.deletePayment(paymentId);
     }
 
-    @PutMapping(path = "{paymentId")
+    @PutMapping(path = "{paymentId}")
     public void updatePayment(@PathVariable("paymentId") Long paymentId,
-                              @RequestParam(required = false) Long payerId,
-                              @RequestParam(required = false) Long recipientId,
-                              @RequestParam(required = false) Long planId,
-                              @RequestParam(required = false) BigDecimal amount,
-                              @RequestParam(required = false) LocalDate date,
-                              @RequestParam(required = false) String method,
-                              @RequestParam(required = false) PaymentStatus status,
-                              @RequestParam(required = false) Boolean toPlan
-                              ) {
-        paymentService.updatePayment(paymentId, payerId, recipientId, planId, amount, date, method, status, toPlan);
+                              @Valid @RequestBody PaymentDTO updatedPayment) {
+        paymentService.updatePayment(paymentId, updatedPayment);
     }
 
 }

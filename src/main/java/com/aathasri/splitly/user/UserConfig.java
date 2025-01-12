@@ -14,7 +14,7 @@ public class UserConfig {
 
 
     @Bean
-    CommandLineRunner commandLineRunner(UserRepository userRepository) {
+    CommandLineRunner commandLineRunnerUser(UserRepository userRepository) {
         return args -> {
             User user1 = new User(
                     "Test User 1",

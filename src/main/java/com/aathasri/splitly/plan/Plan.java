@@ -1,6 +1,9 @@
 package com.aathasri.splitly.plan;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -21,30 +24,45 @@ public class Plan {
             generator = "plan_sequence"
     )
     private Long id;
+    @NotNull
+    @Size(max = 25, message = "Plan name must not exceed 25 characters")
     private String name;
-    private BigDecimal monthlyPrice;
+    @NotNull(message = "Plan price amount cannot be null")
+    @Positive(message = "Plan price must be greater than 0")
+    private BigDecimal price;
+    @NotNull
     private Currency currency;
+    @NotNull
     private LocalDate paymentDate;
+    @NotNull
     private Period paymentInterval;
 
     public Plan() {
     }
 
-    public Plan(Long id, String name, BigDecimal monthlyPrice, Currency currency, LocalDate paymentDate, Period paymentInterval) {
+    public Plan(Long id, String name, BigDecimal price, Currency currency, LocalDate paymentDate, Period paymentInterval) {
         this.id = id;
         this.name = name;
-        this.monthlyPrice = monthlyPrice;
+        this.price = price;
         this.currency = currency;
         this.paymentDate = paymentDate;
         this.paymentInterval = paymentInterval;
     }
 
-    public Plan(String name, BigDecimal monthlyPrice, Currency currency, LocalDate paymentDate, Period paymentInterval) {
+    public Plan(String name, BigDecimal price, Currency currency, LocalDate paymentDate, Period paymentInterval) {
         this.name = name;
-        this.monthlyPrice = monthlyPrice;
+        this.price = price;
         this.currency = currency;
         this.paymentDate = paymentDate;
         this.paymentInterval = paymentInterval;
+    }
+
+    public void copyFrom(Plan plan){
+        this.name = plan.name;
+        this.price = plan.price;
+        this.currency = plan.currency;
+        this.paymentDate = plan.paymentDate;
+        this.paymentInterval = plan.paymentInterval;
     }
 
     public Long getId() {
@@ -63,12 +81,12 @@ public class Plan {
         this.name = name;
     }
 
-    public BigDecimal getMonthlyPrice() {
-        return monthlyPrice;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setMonthlyPrice(BigDecimal monthlyPrice) {
-        this.monthlyPrice = monthlyPrice;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     public Currency getCurrency() {
@@ -100,7 +118,7 @@ public class Plan {
         return "Plan{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", monthlyPrice=" + monthlyPrice +
+                ", monthlyPrice=" + price +
                 ", currency=" + currency +
                 ", paymentDate=" + paymentDate +
                 ", paymentInterval=" + paymentInterval +

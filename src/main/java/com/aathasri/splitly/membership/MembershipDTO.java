@@ -1,53 +1,34 @@
 package com.aathasri.splitly.membership;
 
-import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
 
-@Entity
-@Table
-public class Membership {
-    @Id
-    @SequenceGenerator(
-            name = "membership_sequence",
-            sequenceName = "membership_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "membership_sequence"
-    )
-    private Long id;
+
+public class MembershipDTO {
+
+    @NotNull
+    @Positive
     private Long planId;
+    @NotNull
+    @Positive
     private Long memberId;
+    @NotNull
     private Boolean isAdmin;
+    @NotNull
+    @Positive
     private BigDecimal amountDue;
+    @NotNull
+    @Positive
     private double share;
 
-    public Membership() {
-    }
-
-    public Membership(Long id, Long planId, Long memberId, Boolean isAdmin, double share) {
-        this.id = id;
+    public MembershipDTO(Long planId, Long memberId, Boolean isAdmin, BigDecimal amountDue, double share) {
         this.planId = planId;
         this.memberId = memberId;
         this.isAdmin = isAdmin;
+        this.amountDue = amountDue;
         this.share = share;
-    }
-
-    public Membership(Long planId, Long memberId, Boolean isAdmin, double share) {
-        this.planId = planId;
-        this.memberId = memberId;
-        this.isAdmin = isAdmin;
-        this.share = share;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getPlanId() {
@@ -92,9 +73,8 @@ public class Membership {
 
     @Override
     public String toString() {
-        return "Membership{" +
-                "id=" + id +
-                ", planId=" + planId +
+        return "MembershipDTO{" +
+                "planId=" + planId +
                 ", memberId=" + memberId +
                 ", isAdmin=" + isAdmin +
                 ", amountDue=" + amountDue +

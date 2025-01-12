@@ -3,7 +3,7 @@ package com.aathasri.splitly.user;
 import jakarta.persistence.*;
 
 @Entity
-@Table
+@Table(name = "app_user")
 public class User {
 
     @Id

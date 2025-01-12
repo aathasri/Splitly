@@ -1,38 +1,36 @@
 package com.aathasri.splitly.payment;
 
-import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Entity
-@Table
-public class Payment {
-    @Id
-    @SequenceGenerator(
-            name = "payment_sequence",
-            sequenceName = "payment_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "payment_sequence"
-    )
-    private Long id;
+// USED FOR CREATING AND UPDATING ONLY
+public class PaymentDTO {
+    @NotNull
+    @Positive(message = "payerId must be positive")
     private Long payerId;
+    @NotNull
+    @Positive(message = "recipientId must be positive")
     private Long recipientId;
+    @NotNull
+    @Positive(message = "planId must be positive")
     private Long planId;
+    @NotNull(message = "Payment amount cannot be null")
+    @Positive(message = "Payment amount must be greater than 0")
     private BigDecimal amount;
+    @NotNull
     private LocalDateTime date;
+    @Size(max = 120, message = "Payer ID must not exceed 120 characters")
     private String method;
+    @NotNull
     private PaymentStatus status;
+    @NotNull
     private Boolean toPlan;
 
-    public Payment() {
-    }
-
-    public Payment(Long id, Long payerId, Long recipientId, Long planId, BigDecimal amount, LocalDateTime date, String method, PaymentStatus status, Boolean toPlan) {
-        this.id = id;
+    public PaymentDTO(Long payerId, Long recipientId, Long planId, BigDecimal amount, LocalDateTime date, String method, PaymentStatus status, Boolean toPlan) {
         this.payerId = payerId;
         this.recipientId = recipientId;
         this.planId = planId;
@@ -43,34 +41,15 @@ public class Payment {
         this.toPlan = toPlan;
     }
 
-    public Payment(Long payerId, Long recipientId, Long planId, BigDecimal amount, LocalDateTime date, String method, PaymentStatus status, Boolean toPlan) {
-        this.payerId = payerId;
-        this.recipientId = recipientId;
-        this.planId = planId;
-        this.amount = amount;
-        this.date = date;
-        this.method = method;
-        this.status = status;
-        this.toPlan = toPlan;
-    }
-
-    public Payment(PaymentDTO paymentDTO) {
-        this.payerId = paymentDTO.getPayerId();
-        this.recipientId = paymentDTO.getRecipientId();
-        this.planId = paymentDTO.getPlanId();
-        this.amount = paymentDTO.getAmount();
-        this.date = paymentDTO.getDate();
-        this.method = paymentDTO.getMethod();
-        this.status = paymentDTO.getStatus();
-        this.toPlan = paymentDTO.getToPlan();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public PaymentDTO(Payment payment) {
+        this.payerId = payment.getPayerId();
+        this.recipientId = payment.getRecipientId();
+        this.planId = payment.getPlanId();
+        this.amount = payment.getAmount();
+        this.date = payment.getDate();
+        this.method = payment.getMethod();
+        this.status = payment.getStatus();
+        this.toPlan = payment.getToPlan();
     }
 
     public Long getPayerId() {
@@ -139,9 +118,8 @@ public class Payment {
 
     @Override
     public String toString() {
-        return "Payment{" +
-                "id=" + id +
-                ", payerId=" + payerId +
+        return "PaymentDTO{" +
+                "payerId=" + payerId +
                 ", recipientId=" + recipientId +
                 ", planId=" + planId +
                 ", amount=" + amount +

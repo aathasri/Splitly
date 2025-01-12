@@ -16,7 +16,7 @@ import java.util.List;
 public class PlanConfig {
 
     @Bean
-    CommandLineRunner commandLineRunner(PlanRepository repository) {
+    CommandLineRunner commandLineRunnerPlan(PlanRepository repository) {
         return args -> {
             Plan spotifyTest = new Plan(
                     "Spotify",
