@@ -1,6 +1,8 @@
 package com.aathasri.splitly.membership;
 
-import com.aathasri.splitly.payment.PaymentDTO;
+import com.aathasri.splitly.common.ValidationException;
+import com.aathasri.splitly.plan.PlanService;
+import com.aathasri.splitly.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +26,7 @@ public class MembershipController {
     }
 
     @PostMapping
-    public void registerMembership(@RequestBody Membership membership) {
+    public void registerMembership(@Valid @RequestBody Membership membership) {
         membershipService.addNewMembership(membership);
     }
 
@@ -35,28 +37,8 @@ public class MembershipController {
 
     @PutMapping(path = "{membershipId}")
     public void updateMembership(@PathVariable("membershipId") Long membershipId,
-                                 @RequestParam(required = false) Long planId,
-                                 @RequestParam(required = false) Long memberId,
-                                 @RequestParam(required = false) Boolean isAdmin,
-                                 @RequestParam(required = false) Double share
+                                 @Valid @RequestBody Membership membership
                                  ) {
-        membershipService.updateMembership(membershipId, planId, memberId, isAdmin, share);
+        membershipService.updateMembership(membershipId, membership);
     }
-
-
-
-
-
-//    @PostMapping
-//    public void registerMembership(@RequestBody MembershipDTO membershipDTO) {
-//        membershipService.addNewMembership(membershipDTO);
-//    }
-
-
-//    @PutMapping(path = "{membershipId}")
-//    public void updateMembership(@PathVariable("membershipId") Long membershipId,
-//                                 @Valid @RequestParam(required = false) PaymentDTO paymentDTO
-//    ) {
-//        membershipService.updateMembership(membershipId, paymentDTO);
-//    }
 }

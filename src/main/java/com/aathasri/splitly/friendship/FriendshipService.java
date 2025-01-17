@@ -1,12 +1,15 @@
 package com.aathasri.splitly.friendship;
 
+import com.aathasri.splitly.common.ValidationException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Service
 public class FriendshipService {
@@ -22,9 +25,14 @@ public class FriendshipService {
         return friendshipRepository.findAll();
     }
 
+    public List<Friendship> getFriendshipByUserId(Long userId) {
+        return this.friendshipRepository.findFriendshipsByUserID(userId);
+    }
+
     public void addNewFriendship(Friendship friendship) {
 
-        //TODO Check if friendship exists already
+        validateFriendship(friendship);
+
         friendshipRepository.save(friendship);
     }
 
@@ -36,36 +44,49 @@ public class FriendshipService {
         friendshipRepository.deleteById(friendshipId);
     }
 
+    public Set<Long> findFriends(Long userId){
+        List<Friendship> friendships = getFriendshipByUserId(userId);
+        Set<Long> friends = new HashSet<>();
+
+        for (Friendship f: friendships) {
+            friends.add(f.getReceiverId());
+            friends.add(f.getReceiverId());
+            friends.remove(userId);
+        }
+
+        return friends;
+    }
+
     @Transactional
-    public void updateFriendship(Long friendshipId, Long senderId, Long recieverId, LocalDate requestDate, FriendshipStatus friendshipStatus) {
-        Friendship friendship = friendshipRepository.findById(friendshipId)
+    public void updateFriendship(Long friendshipId, Friendship updatedFriendship) {
+        Friendship originalFriendship = friendshipRepository.findById(friendshipId)
                 .orElseThrow(() -> new IllegalStateException(
                         "friendship with id " + " does not exist"
                 ));
 
-        if (senderId != null && senderId > 0 && !Objects.equals(friendship.getSenderId(), senderId)) {
-            friendship.setSenderId(senderId);
+        validateFriendship(updatedFriendship);
+
+        originalFriendship.copyFrom(updatedFriendship);
+    }
+
+    private void validateFriendship(Friendship friendship) {
+        ValidationException ve = new ValidationException();
+
+        if (friendship.getReceiverId().equals(friendship.getSenderId())) {
+            ve.addErrors("friendship between the same user cannot exist");
         }
 
-        if (recieverId != null && recieverId > 0 && !Objects.equals(friendship.getReceiverId(), recieverId)) {
-            friendship.setReceiverId(recieverId);
+        if (checkDuplicateFriendship(friendship)) {
+            ve.addErrors("friendship between " + friendship.getSenderId() + " and " + friendship.getReceiverId() + " already exists");
         }
 
-        if (requestDate != null && !requestDate.equals(friendship.getRequestDate())) {
-            if (requestDate.isAfter(LocalDate.now())) {
-                throw new IllegalStateException("request date cannot be in the future");
-            }
-            if (requestDate.isBefore(LocalDate.now().minusYears(1))) {
-                throw new IllegalStateException("request dat cannot be more than 1 year in the past");
-            }
-            friendship.setRequestDate(requestDate);
-        }
-
-        if (friendshipStatus != null && !friendshipStatus.equals(friendship.getStatus())) {
-            friendship.setStatus(friendshipStatus);
+        if (ve.hasErrors()) {
+            throw ve;
         }
     }
 
-
-
+    private Boolean checkDuplicateFriendship(Friendship friendship){
+        Set<Long> friends = findFriends(friendship.getSenderId());
+        return friends.contains(friendship.getReceiverId());
+    }
 }

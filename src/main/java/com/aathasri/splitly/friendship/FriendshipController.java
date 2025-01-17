@@ -1,5 +1,6 @@
 package com.aathasri.splitly.friendship;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,11 +36,8 @@ public class FriendshipController {
 
     @PutMapping(path = "{friendshipId}")
     public void updateFriendship(@PathVariable("friendshipId") Long friendshipId,
-                                 @RequestParam(required = false) Long senderId,
-                                 @RequestParam(required = false) Long recieverId,
-                                 @RequestParam(required = false) LocalDate requestDate,
-                                 @RequestParam(required = false) FriendshipStatus status) {
-    friendshipService.updateFriendship(friendshipId, senderId, recieverId, requestDate, status);
+                                 @Valid @RequestBody Friendship friendship) {
+    friendshipService.updateFriendship(friendshipId, friendship);
     }
 
 

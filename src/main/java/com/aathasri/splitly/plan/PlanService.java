@@ -47,6 +47,7 @@ public class PlanService {
         if (!exists) {
             throw new IllegalStateException("plan with id " + planId + " does not exists");
         }
+
         planRepository.deleteById(planId);
     }
 
@@ -57,43 +58,5 @@ public class PlanService {
         ));
 
         originaPlan.copyFrom(updatedPlan);
-
     }
-
-
-//    @Transactional
-//    public void updatePlan(Long planId, String name, BigDecimal monthlyPrice, Currency currency, LocalDate paymentDate, Period paymentInterval) {
-//        Plan plan = planRepository.findById(planId).orElseThrow(() -> new IllegalStateException(
-//                "plan with id " + planId + " does not exist"
-//        ));
-//
-//        if (name != null && !Objects.equals(plan.getName(), name)) {
-//            if (name.isBlank()) {
-//                throw new IllegalStateException("name cannot be blank");
-//            }
-//            plan.setName(name);
-//        }
-//
-//        if (monthlyPrice != null && !Objects.equals(plan.getPrice(), monthlyPrice)) {
-//            if (monthlyPrice.compareTo(BigDecimal.ZERO) <= 0) {
-//                throw new IllegalStateException("monthly price cannot be less than or equal to zero");
-//            }
-//            plan.setPrice(monthlyPrice);
-//        }
-//
-//        if (currency != null) {
-//            plan.setCurrency(currency);
-//        }
-//
-//        if (paymentInterval != null) {
-//            plan.setPaymentInterval(paymentInterval);
-//        }
-//
-//        if (paymentDate != null) {
-//            if (paymentDate.isAfter(plan.getPaymentDate().plus(plan.getPaymentInterval()))) {
-//                throw new IllegalStateException("paymentDate cannot be after current period");
-//            }
-//            plan.setPaymentDate(paymentDate);
-//        }
-//    }
 }

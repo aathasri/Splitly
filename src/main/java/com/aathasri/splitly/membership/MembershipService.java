@@ -1,10 +1,14 @@
 package com.aathasri.splitly.membership;
 
+import com.aathasri.splitly.common.ValidationException;
+import com.aathasri.splitly.plan.Plan;
 import com.aathasri.splitly.plan.PlanService;
+import com.aathasri.splitly.user.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,11 +16,13 @@ import java.util.Objects;
 public class MembershipService {
 
     private final MembershipRepository membershipRepository;
+    private final UserService userService;
     private final PlanService planService;
 
     @Autowired
-    public MembershipService(MembershipRepository membershipRepository, PlanService planService) {
+    public MembershipService(MembershipRepository membershipRepository, UserService userService, PlanService planService) {
         this.membershipRepository = membershipRepository;
+        this.userService = userService;
         this.planService = planService;
     }
 
@@ -25,13 +31,14 @@ public class MembershipService {
     }
 
     public void addNewMembership(Membership membership) {
-        boolean exists = membershipRepository.existsById(membership.getId());
-        if (exists) {
-            throw new IllegalStateException("membership already exists");
-        }
+
+        validateMembership(membership);
+
+        updatePlanOfMembership(membership, true);
+
         membershipRepository.save(membership);
 
-        // TODO: when there is a new membership, adjust all the shares of everyone in the plan
+        updateAllMembersOfPlan(membership);
 
     }
 
@@ -43,39 +50,70 @@ public class MembershipService {
         membershipRepository.deleteById(membershipId);
     }
 
-    public void updateAllMemberShares() {
-    // this class needs to update the shares of all the members in the plan so
+    public List<Membership> getAllPlanMemberships(Long planId) {
+        return membershipRepository.findMembershipsForPlan(planId);
     }
 
-    public void calculateMemberAmountDue(){
+    private void updatePlanOfMembership(Membership membership, boolean isAddition) {
+        Plan membershipPlan = planService.getPlan(membership.getPlanId());
 
+        Double updatedShares = isAddition
+                ? membershipPlan.getTotalShares() + membership.getShare()
+                : membershipPlan.getTotalShares() - membership.getShare();
+
+        membershipPlan.setTotalShares(updatedShares);
+    }
+
+    private void updateAllMembersOfPlan(Membership membership) {
+        List<Membership> planMemberships = getAllPlanMemberships(membership.getPlanId());
+
+        Plan membershipPlan = planService.getPlan(membership.getPlanId());
+
+        BigDecimal price = membershipPlan.getPrice();
+
+        Double totalShares = membershipPlan.getTotalShares();
+
+        planMemberships.forEach( m -> {
+            BigDecimal div = BigDecimal.valueOf(m.getShare() / totalShares);
+            m.setAmountDue(price.multiply(div));
+        });
     }
 
     @Transactional
-    public void updateMembership(Long membershipId, Long planId, Long memberId, Boolean isAdmin, double share) {
-        Membership membership = membershipRepository.findById(membershipId)
+    public void updateMembership(Long membershipId, Membership updatedMembership) {
+        Membership originalMembership = membershipRepository.findById(membershipId)
                 .orElseThrow(() -> new IllegalStateException(
                         "membership with id " + membershipId + " does not exist"
                 ));
 
+        originalMembership.copyFrom(updatedMembership);
 
-        if (planId != null && planId > 0 && !Objects.equals(membership.getPlanId(), planId)) {
-            membership.setPlanId(planId);
-            // TODO: adjust the shares of everyone in the new plan and fix the ones in the old plan
-        }
-
-        if (memberId != null && memberId > 0 && !Objects.equals(membership.getMemberId(), memberId)) {
-            membership.setMemberId(memberId);
-        }
-
-        if (isAdmin != null) {
-            membership.setAdmin(isAdmin);
-        }
-
-        if (share >= 0.0 && share <= 1.0) {
-            membership.setShare(share);
-            // TODO: adjust the shares of everyone in the plan
+        if (updatedMembership.getShare() != originalMembership.getShare()) {
+            updatePlanOfMembership(originalMembership, false);
+            updatePlanOfMembership(updatedMembership, true);
+            updateAllMembersOfPlan(updatedMembership);
         }
     }
 
+    private void validateMembership(Membership membership) {
+        ValidationException ve = new ValidationException();
+
+        if(!planService.existsByPlanId(membership.getPlanId())) {
+            ve.addErrors("plan with plan id " + membership.getPlanId() + " does not exist");
+        }
+
+        if(!userService.existUserById(membership.getMemberId())) {
+            ve.addErrors("member with user id " + membership.getMemberId() + "does not exist");
+        }
+
+        if (ve.hasErrors()) {
+            throw ve;
+        }
+    }
 }
+
+
+
+
+
+

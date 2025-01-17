@@ -26,7 +26,7 @@ public class PaymentController {
     }
 
     @PostMapping
-    public void registerNewPayment(@Valid @RequestBody PaymentDTO payment) {
+    public void registerNewPayment(@Valid @RequestBody Payment payment) {
         paymentService.addNewPayment(payment);
     }
 
@@ -37,8 +37,8 @@ public class PaymentController {
 
     @PutMapping(path = "{paymentId}")
     public void updatePayment(@PathVariable("paymentId") Long paymentId,
-                              @Valid @RequestBody PaymentDTO updatedPayment) {
-        paymentService.updatePayment(paymentId, updatedPayment);
+                              @Valid @RequestBody Payment payment) {
+        paymentService.updatePayment(paymentId, payment);
     }
 
 }

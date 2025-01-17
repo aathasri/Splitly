@@ -27,15 +27,11 @@ public class PaymentService {
         return paymentRepository.findAll();
     }
 
-    public void addNewPayment(PaymentDTO paymentDTO) {
+    public void addNewPayment(Payment newPayment) {
 
-        validatePayment(paymentDTO.getPayerId(), paymentDTO.getRecipientId(), paymentDTO.getPlanId());
+        validatePayment(newPayment);
 
-        Payment payment = new Payment();
-
-        payment = new Payment(paymentDTO);
-
-        paymentRepository.save(payment);
+        paymentRepository.save(newPayment);
     }
 
     public void deletePayment(Long paymentId) {
@@ -44,38 +40,30 @@ public class PaymentService {
 
     @Transactional
     public void updatePayment(Long paymentId,
-                              PaymentDTO updatedPayment) {
-        Payment payment = paymentRepository.findById(paymentId)
+                              Payment updatedPayment) {
+        Payment originalPayment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new IllegalStateException(
                         "payment with id " + " does not exist"
                 ));
 
-        validatePayment(updatedPayment.getPayerId(),
-                updatedPayment.getRecipientId(),
-                updatedPayment.getPlanId());
+        validatePayment(updatedPayment);
 
-        // TODO: make validation so that date is not in the future
-
-        payment = new Payment(updatedPayment);
-
-        paymentRepository.save(payment);
+        originalPayment.copyFrom(updatedPayment);
     }
 
-    private void validatePayment(Long payerId,
-                                 Long recipientId,
-                                 Long planId) {
+    private void validatePayment(Payment payment) {
         ValidationException ve = new ValidationException();
 
-        if (!userService.existUserById(payerId)) {
-            ve.addErrors("payer with user id " + payerId + " does not exist");
+        if (!userService.existUserById(payment.getPayerId())) {
+            ve.addErrors("payer with user id " + payment.getPayerId() + " does not exist");
         }
 
-        if (!userService.existUserById(recipientId)) {
-            ve.addErrors("recipient with user id " +  recipientId + " does not exist");
+        if (!userService.existUserById(payment.getRecipientId())) {
+            ve.addErrors("recipient with user id " +  payment.getRecipientId() + " does not exist");
         }
 
-        if (!planService.existsByPlanId(planId)) {
-            ve.addErrors("plan with id " + planId + " does not exist");
+        if (!planService.existsByPlanId(payment.getPlanId())) {
+            ve.addErrors("plan with id " + payment.getPlanId() + " does not exist");
         }
 
         if (ve.hasErrors()) {

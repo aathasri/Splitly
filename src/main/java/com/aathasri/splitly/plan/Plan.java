@@ -1,9 +1,7 @@
 package com.aathasri.splitly.plan;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -24,18 +22,21 @@ public class Plan {
             generator = "plan_sequence"
     )
     private Long id;
-    @NotNull
-    @Size(max = 25, message = "Plan name must not exceed 25 characters")
+    @NotNull(message = "plan name cannot be null")
+    @Size(max = 25, message = "plan name must not exceed 25 characters")
     private String name;
-    @NotNull(message = "Plan price amount cannot be null")
-    @Positive(message = "Plan price must be greater than 0")
+    @NotNull(message = "plan price amount cannot be null")
+    @Positive(message = "plan price must be greater than 0")
     private BigDecimal price;
-    @NotNull
+    @NotNull(message = "plan currency cannot be null")
     private Currency currency;
-    @NotNull
+    @NotNull(message = "plan payment date cannot be null")
+    @FutureOrPresent(message = "plan payment date cannot be in the past")
     private LocalDate paymentDate;
-    @NotNull
+    @NotNull(message = "plan payment interval cannot be null")
     private Period paymentInterval;
+    @Min(value = 1, message = "plan total shares cannot be less than 1")
+    private Double totalShares;
 
     public Plan() {
     }
@@ -111,6 +112,14 @@ public class Plan {
 
     public void setPaymentInterval(Period paymentInterval) {
         this.paymentInterval = paymentInterval;
+    }
+
+    public Double getTotalShares() {
+        return totalShares;
+    }
+
+    public void setTotalShares(Double totalShares) {
+        this.totalShares = totalShares;
     }
 
     @Override

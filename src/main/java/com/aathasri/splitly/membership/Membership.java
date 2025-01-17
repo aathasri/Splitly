@@ -1,6 +1,8 @@
 package com.aathasri.splitly.membership;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
 
@@ -18,11 +20,18 @@ public class Membership {
             generator = "membership_sequence"
     )
     private Long id;
+    @NotNull(message = "membership planId cannot be null")
+    @Positive(message = "membership planId must be positive")
     private Long planId;
+    @NotNull(message = "membership memberId cannot be null")
+    @Positive(message = "membership memberId must be positive")
     private Long memberId;
+    @NotNull(message = "membership isAdmin cannot be null")
     private Boolean isAdmin;
+    @Positive(message = "membership amount due cannot be null")
     private BigDecimal amountDue;
-    private double share;
+    @Positive(message = "membership share must be positive")
+    private Double share;
 
     public Membership() {
     }
@@ -40,6 +49,13 @@ public class Membership {
         this.memberId = memberId;
         this.isAdmin = isAdmin;
         this.share = share;
+    }
+
+    public void copyFrom(Membership membership) {
+        this.planId = membership.getPlanId();
+        this.memberId = membership.getMemberId();
+        this.isAdmin = membership.getIsAdmin();
+        this.share = membership.getShare();
     }
 
     public Long getId() {
@@ -66,11 +82,11 @@ public class Membership {
         this.memberId = memberId;
     }
 
-    public Boolean getAdmin() {
+    public Boolean getIsAdmin() {
         return isAdmin;
     }
 
-    public void setAdmin(Boolean admin) {
+    public void setIsAdmin(Boolean admin) {
         isAdmin = admin;
     }
 

@@ -1,6 +1,9 @@
 package com.aathasri.splitly.friendship;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDate;
 
@@ -19,9 +22,16 @@ public class Friendship {
             generator = "friendship_sequence"
     )
     private Long id;
+    @NotNull(message = "friendship senderId cannot be null")
+    @Positive(message = "friendship senderId must be positive")
     private Long senderId;
+    @NotNull(message = "friendship recieverId cannot be null")
+    @Positive(message = "friendship recieverId must be positive")
     private Long receiverId;
+    @NotNull(message = "friendship request date cannot be null")
+    @PastOrPresent(message = "friendship request date cannot be in the future")
     private LocalDate requestDate;
+    @NotNull(message = "friendship status cannot be null")
     private FriendshipStatus status;
 
     public Friendship() {
@@ -40,6 +50,13 @@ public class Friendship {
         this.receiverId = receiverId;
         this.requestDate = requestDate;
         this.status = status;
+    }
+
+    public void copyFrom(Friendship friendship) {
+        this.senderId = friendship.senderId;
+        this.receiverId = friendship.receiverId;
+        this.requestDate = friendship.requestDate;
+        this.status = friendship.status;
     }
 
     public Long getId() {

@@ -1,6 +1,10 @@
 package com.aathasri.splitly.payment;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -19,13 +23,26 @@ public class Payment {
             generator = "payment_sequence"
     )
     private Long id;
+    @NotNull(message = "payment payerId cannot be null")
+    @Positive(message = "payment payerId must be positive")
     private Long payerId;
+    @NotNull(message = "payment recipientId cannot be null")
+    @Positive(message = "payment recipientId must be positive")
     private Long recipientId;
+    @NotNull(message = "payment planId cannot be null")
+    @Positive(message = "payment planId must be positive")
     private Long planId;
+    @NotNull(message = "payment amount cannot be null")
+    @Positive(message = "payment amount must be greater than 0")
     private BigDecimal amount;
+    @NotNull(message = "payment date cannot be null")
+    @PastOrPresent(message = "payment date cannot be in the future")
     private LocalDateTime date;
+    @Size(max = 120, message = "payment method must not exceed 120 characters")
     private String method;
+    @NotNull(message = "payment status cannot be null")
     private PaymentStatus status;
+    @NotNull(message = "payment toPlan cannot be null")
     private Boolean toPlan;
 
     public Payment() {
@@ -54,15 +71,15 @@ public class Payment {
         this.toPlan = toPlan;
     }
 
-    public Payment(PaymentDTO paymentDTO) {
-        this.payerId = paymentDTO.getPayerId();
-        this.recipientId = paymentDTO.getRecipientId();
-        this.planId = paymentDTO.getPlanId();
-        this.amount = paymentDTO.getAmount();
-        this.date = paymentDTO.getDate();
-        this.method = paymentDTO.getMethod();
-        this.status = paymentDTO.getStatus();
-        this.toPlan = paymentDTO.getToPlan();
+    public void copyFrom(Payment payment) {
+        this.payerId = payment.getPayerId();
+        this.recipientId = payment.getRecipientId();
+        this.planId = payment.getPlanId();
+        this.amount = payment.getAmount();
+        this.date = payment.getDate();
+        this.method = payment.getMethod();
+        this.status = payment.getStatus();
+        this.toPlan = payment.getToPlan();
     }
 
     public Long getId() {
